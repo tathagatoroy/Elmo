@@ -1,0 +1,24 @@
+{
+    "os": "Linux-4.15.0-189-generic-x86_64-with-debian-buster-sid",
+    "python": "3.7.13",
+    "heartbeatAt": "2022-09-30T17:48:28.379112",
+    "startedAt": "2022-09-30T17:48:26.308443",
+    "docker": null,
+    "gpu": "NVIDIA GeForce GTX 1080 Ti",
+    "gpu_count": 3,
+    "cpu_count": 40,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "main.py",
+    "codePath": "src/main.py",
+    "git": {
+        "remote": "https://github.com/tathagatoroy/Elmo.git",
+        "commit": "24e52d170f0ea69d25ccb55d4b163e288d1d9ddf"
+    },
+    "email": "tathagatoroy3@gmail.com",
+    "root": "/home2/tathagato/Elmo",
+    "host": "gnode027",
+    "username": "tathagato",
+    "executable": "/home2/tathagato/miniconda3/envs/habitat/bin/python3"
+}
