@@ -185,17 +185,22 @@ class Dataset2(torch.utils.data.Dataset):
 
     def __getitem__(self,index):
 
-        review = self.reviews[i]
-        label = self.label[i]
+        review = self.reviews[index]
+        label = self.labels[index]
+        tokenized_review = word_tokenize(review)
+        #print(len(tokenized_review))
+        #print(review)
+        #print(tokenized_review)
         embeddings = []
-        for word in review:
+
+        for word in tokenized_review:
             if word in self.vocab_to_id.keys():
                 embedding = self.embedding(word)
                 embeddings.append(embedding)
             else:
                 embedding = self.embedding(self.unk)
                 embeddings.append(embedding)
-            while(len(embeddings) < MAX_REVIEW_SIZE):
+        while(len(embeddings) < MAX_REVIEW_SIZE):
                 embeddings.append(self.embedding(self.pad))
         embeddings = np.array(embeddings)
         return(embeddings, label)

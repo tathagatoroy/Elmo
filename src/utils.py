@@ -45,7 +45,8 @@ def generate_reviews(filepath):
      
     reviews = df.iloc[:]["text"]
     labels = df.iloc[:]["label"]
-    labels = labels - 1
+    labels = labels
+    final_reviews = []
     for i,review in enumerate(reviews):
         new_review = ""
         review = review.replace("\\n"," ")
@@ -53,14 +54,16 @@ def generate_reviews(filepath):
             if c.isalnum() or c == " " or c == "." :
                 new_review += c
         tokenized_review = word_tokenize(new_review)
-        print(new_review)
-        print(len(tokenized_review))
-        print(tokenized_review)
+        #print(new_review)
+        #print(len(tokenized_review))
+        #print(tokenized_review)
         if len(tokenized_review) > 10 and len(tokenized_review) <= MAX_REVIEW_SIZE:
             #print(new_review.type())
-            reviews.append(new_review)
+            final_reviews.append(new_review)
             new_labels.append(labels[i])
-    return reviews, new_labels
+            #print(len(tokenized_review))
+    print("size : {0} {1}".format(len(final_reviews), len(new_labels)))
+    return final_reviews, new_labels
 
 
 

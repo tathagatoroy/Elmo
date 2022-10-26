@@ -13,12 +13,11 @@ import argparse
 from utils import *
 from dataset import Dataset
 from config import *
-from model import LM
-
+from model import LM,LM2
 
 # wandb.init(project = "Natural Language Understanding ", entity = "roy3" , run = "try 1")
 
-def train(train_dataset_filepath, val_dataset_filepath, epochs, model_path = LM_MODEL_PATH, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, model_saved=False):
+def train(train_dataset_filepath, val_dataset_filepath, epochs, model_path = LM2_MODEL_PATH, batch_size=BATCH_SIZE, learning_rate=LEARNING_RATE, model_saved=False):
     """  function to train the model on language modelling
 
         ARGS :
@@ -75,11 +74,11 @@ def train(train_dataset_filepath, val_dataset_filepath, epochs, model_path = LM_
     val_dataloader = DataLoader(
         val_dataset, batch_size=batch_size, shuffle=True)
     # print(vocabulary_size)
-    model = LM(device)
+    model = LM2(device)
    
     # model loading
     if model_saved:
-        model.load_state_dict(torch.load(LM_MODEL_PATH))
+        model.load_state_dict(torch.load(LM2_MODEL_PATH))
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     model.train()
@@ -127,14 +126,14 @@ def train(train_dataset_filepath, val_dataset_filepath, epochs, model_path = LM_
             # add the input vector and label to the gpu
             
             input_vector = embeddings.to(device)
-            input_vector = torch.reshape(input_vector, (input_vector.shape[1],input_vector.shape[0],input_vector.shape[2]))
-
+            #input_vector = torch.reshape(input_vector, (input_vector.shape[1],input_vector.shape[0],input_vector.shape[2]))
+            input_vector = input_vector.permute(1,0,2)
             labels = labels.to(device)
 
             # forward pass
             logits = model(input_vector)
-            logits = torch.reshape(logits,(logits.shape[1],logits.shape[2],logits.shape[0]))
-            
+            #logits = torch.reshape(logits,(logits.shape[1],logits.shape[2],logits.shape[0]))
+            logits = logits.permute(1,2,0)
             
             # print("shape of the logits : {0}",format(logits.shape))
 
@@ -187,14 +186,17 @@ def train(train_dataset_filepath, val_dataset_filepath, epochs, model_path = LM_
                 # break
             # add the input vector and label to the gpu
             input_vector = embeddings.to(device)
-            input_vector = torch.reshape(input_vector, (input_vector.shape[1],input_vector.shape[0],input_vector.shape[2]))
+            #input_vector = torch.reshape(input_vector, (input_vector.shape[1],input_vector.shape[0],input_vector.shape[2]))
+            input_vector = input_vector.permute(1,0,2)
+
 
             labels = labels.to(device)
 
             # forward pass
             logits = model(input_vector)
-            logits = torch.reshape(logits,(logits.shape[1],logits.shape[2],logits.shape[0]))
-            
+            #logits = torch.reshape(logits,(logits.shape[1],logits.shape[2],logits.shape[0]))
+            logits = logits.permute(1,2,0)
+
             
             # print("shape of the logits : {0}",format(logits.shape))
 
@@ -243,10 +245,10 @@ def train(train_dataset_filepath, val_dataset_filepath, epochs, model_path = LM_
 
         print("Val Loss for epoch {0} : {1} ".format(epoch + 1, val_loss))
         print("Val Accuracy for epoch {0} : {1}".format(epoch + 1, val_accuracy))
-        print("Train perplexity for epoch {0} : {1}".format(
-            epoch + 1, train_perplexity))
-        print("Val perplexity for epoch {0} : {1}".format(
-            epoch + 1, val_perplexity))
+        #print("Train perplexity for epoch {0} : {1}".format(
+        #    epoch + 1, train_perplexity))
+        # print("Val perplexity for epoch {0} : {1}".format(
+        #    epoch + 1, val_perplexity))
         error['train'].append(train_loss)
         error['val'].append(val_loss)
         accuracy['train'].append(train_accuracy)
@@ -266,10 +268,10 @@ def train(train_dataset_filepath, val_dataset_filepath, epochs, model_path = LM_
         })
 
         # save the model
-        if (epoch + 1) % 2 == 0:
+        if (epoch + 1) % 1 == 0:
             print("Saving the model ")
-            torch.save(model.state_dict(), LM_MODEL_PATH)
-            torch.save(model.Elmo.state_dict(), ELMO_MODEL_PATH)
+            torch.save(model.state_dict(), LM2_MODEL_PATH)
+            torch.save(model.Elmo.state_dict(), ELMO2_MODEL_PATH)
 
 
 
